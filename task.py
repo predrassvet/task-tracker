@@ -1,37 +1,42 @@
 import json
+
+
 class Task:
-    def __init__(self, name, deadline, done=False):
+    def __init__(self, name: str, deadline: str, done: bool = False) -> None:
         self.name = name
         self.deadline = deadline
-        self.done= done
-    def __str__(self):
+        self.done = done
+
+    def __str__(self) -> str:
         return f"Task - {self.name}, Deadline: {self.deadline}, Done: {self.done}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"Task - {self.name}, Deadline: {self.deadline}, Done: {self.done}"
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         return {
             "name": self.name,
             "deadline": self.deadline,
             "done": self.done
         }
-    def mark_done(self):
-            self.done = True
+
+    def mark_done(self) -> None:
+        self.done = True
+
 
 class TaskManager:
-    def __init__(self, filename=False):
-        self.tasks = []
-        self.filename = "tasks.json"
+    def __init__(self, filename: str = "tasks.json") -> None:
+        self.tasks: list[Task] = []
+        self.filename = filename
 
-    def add_task(self, task):
+    def add_task(self, task: Task) -> None:
         self.tasks.append(task)
 
-    def show_tasks(self):
-        for index,task in enumerate(self.tasks, start=1):
+    def show_tasks(self) -> None:
+        for index, task in enumerate(self.tasks, start=1):
             print(f'{index}. {task}')
 
-    def get_task(self,number):
+    def get_task(self, number: int) -> Task:
         if not isinstance(number, int):
             raise TypeError("Должно быть число")
         elif number > len(self.tasks) or number < 1:
@@ -39,22 +44,22 @@ class TaskManager:
         else:
             return self.tasks[number - 1]
 
-    def task_done(self, number):
+    def task_done(self, number: int) -> None:
         task = self.get_task(number)
         task.mark_done()
 
-    def task_delete(self, number):
+    def task_delete(self, number: int) -> None:
         task = self.get_task(number)
         self.tasks.remove(task)
 
-    def save_task(self):
+    def save_task(self) -> None:
         data = []
         for task in self.tasks:
             data.append(task.to_dict())
         with open(self.filename, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent = 4)
+            json.dump(data, f, ensure_ascii=False, indent=4)
 
-    def load(self):
+    def load(self) -> None:
         try:
             with open(self.filename, "r", encoding="utf-8") as f:
                 data = json.load(f)
@@ -66,9 +71,9 @@ class TaskManager:
 
 if __name__ == "__main__":
     manager = TaskManager()
-    b = Task("БЖД проект", "02.08.2021" )
-    v = Task("мат проект", "22.01.2041" )
-    h = Task("чертеж проект", "12.08.2091" )
+    b = Task("БЖД проект", "02.08.2021")
+    v = Task("мат проект", "22.01.2041")
+    h = Task("чертеж проект", "12.08.2091")
     manager.add_task(b)
     manager.add_task(v)
     manager.add_task(h)
@@ -81,10 +86,3 @@ if __name__ == "__main__":
     manager2 = TaskManager()
     manager2.load()
     manager2.show_tasks()
-
-
-
-
-
-
-
