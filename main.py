@@ -1,4 +1,7 @@
 from task import TaskManager, Task
+from db import db_init
+    
+db_init()   # создание базы данных и таблицы при запуске программы
 
 def add_task_menu(manager):
     user_task = input("Введите задачу:")
