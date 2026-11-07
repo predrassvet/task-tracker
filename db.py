@@ -1,5 +1,5 @@
 import sqlite3
-def db_init() -> None:
+def init_db() -> None:
     conn = sqlite3.connect('task.db')
     cur = conn.cursor()
     cur.execute(''' CREATE TABLE IF NOT EXISTS tasks (
@@ -14,16 +14,17 @@ def add_task_to_db(task_name: str, deadline: str) -> None:
     conn.commit()
     conn.close()
 
-def get_all_tasks() -> None:
+def get_all_tasks() -> list:
     conn = sqlite3.connect('task.db')
     cur = conn.cursor()
     cur.execute(" SELECT * FROM tasks")
-    rows = cur.fetchall()
-    for row in rows:
-        print(row)
+    rows = cur.fetchall() 
     conn.close()
+    return rows
  
 if __name__ == "__main__":
-    db_init()
-    add_task_to_db("gg", "09.21")
-    get_all_tasks()
+    init_db()
+    #add_task_to_db("gg", "09.21")
+    test = get_all_tasks()
+    for task in test:
+        print(i)
