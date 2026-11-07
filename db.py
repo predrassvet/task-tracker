@@ -29,10 +29,18 @@ def mark_done(task_id: int) -> None:
     conn.commit()
     conn.close()
 
+def delete_task(task_id: int) -> None:
+    conn = sqlite3.connect('task.db')
+    cur = conn.cursor()
+    cur.execute("DELETE FROM tasks WHERE id = ?", (task_id, ))
+    conn.commit()
+    conn.close()
+
 if __name__ == "__main__":
     init_db()
     #add_task_to_db("gg", "09.21")
     test = get_all_tasks()
     for task in test:
         print(task)
-    mark_done(4)
+    #mark_done(5)
+    #delete_task(4)
