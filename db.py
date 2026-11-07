@@ -21,10 +21,18 @@ def get_all_tasks() -> list:
     rows = cur.fetchall() 
     conn.close()
     return rows
- 
+
+def mark_done(task_id: int) -> None:
+    conn = sqlite3.connect('task.db')
+    cur = conn.cursor()
+    cur.execute("UPDATE tasks SET done = True WHERE tasks.id = (?)", (task_id, ))
+    conn.commit()
+    conn.close()
+
 if __name__ == "__main__":
     init_db()
     #add_task_to_db("gg", "09.21")
     test = get_all_tasks()
     for task in test:
-        print(i)
+        print(task)
+    mark_done(4)
