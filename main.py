@@ -1,18 +1,18 @@
 from task import TaskManager, Task
-from db import db_init
+from db import init_db, get_all_tasks, add_task_to_db
     
 init_db()   # создание базы данных и таблицы при запуске программы
 
-def add_task_menu(manager):
+def add_task_menu():
     user_task = input("Введите задачу:")
     user_deadline = input("Введите дедлайн:")
-    create_task = Task(user_task, user_deadline)
-    manager.add_task(create_task)
-    manager.save_task()
+    add_task_to_db(user_task, user_deadline)
     print("Задача добавлена!")
 
-def show_task_menu(manager):
-    manager.show_tasks()
+def show_task_menu():
+    tasks = get_all_tasks()
+    for task_id, task_name, deadline, done in tasks:
+        print(f"task_id: {task_id} Task - {task_name}, Deadline: {deadline}, Done: {'[x]' if done == 1  else '[]'}")
 
 def choose_task_menu(manager):
     while True:
@@ -57,19 +57,19 @@ def main():
     while True:
         print_menu()
         user = user_input()
-        if  user == "1":                                     #Готово
+        if  user == "1":                                     
             while True:
-                add_task_menu(manager)
+                add_task_menu()
                 print("Хотите добавить еще задачу?  \n")
                 if user_input("[да|нет]: ").lower() == "да":
                     continue
                 else:
                     break
         elif user == "2":
-            if len(manager.tasks) == 0:
+            if len(get_all_tasks()) == 0:
                 print("Нет задач")
             else:
-                show_task_menu(manager)
+                show_task_menu()
                 input("Нажмите Enter для выхода")
         elif user == "3":
             while True:
