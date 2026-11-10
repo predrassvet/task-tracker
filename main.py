@@ -1,5 +1,4 @@
-from task import TaskManager, Task
-from db import init_db, get_all_tasks, add_task_to_db
+from db import init_db, get_all_tasks, add_task_to_db, mark_done, delete_task
     
 init_db()   # создание базы данных и таблицы при запуске программы
 
@@ -14,24 +13,28 @@ def show_task_menu():
     for task_id, task_name, deadline, done in tasks:
         print(f"task_id: {task_id} Task - {task_name}, Deadline: {deadline}, Done: {'[x]' if done == 1  else '[]'}")
 
-def choose_task_menu(manager):
+def choose_task_menu():
+    tasks = get_all_tasks()
+    list_id = []
+    for task in tasks:
+        list_id.append(task[0])
     while True:
         try:
             user_get = int(user_input())
-            manager.get_task(user_get)
-            return user_get
+            if user_get in list_id:
+                return user_get
+            else:
+                print("Нет такого номера!")
         except (ValueError,TypeError) as e:
             print(f'Error: {e}')
             continue
 
-def delete_task_menu(manager, number):
-    manager.task_delete(number)
-    manager.save_task()
+def delete_task_menu(number):
+    delete_task(number)
     print("Готово!")
 
-def task_done_menu(manager, number):
-    manager.task_done(number)
-    manager.save_task()
+def task_done_menu(number):
+    mark_done(number)
     print("Готово!")
 
 def user_input(text="Ввод: "):
@@ -51,9 +54,6 @@ def print_menu_choice():
     print("0. Выход с меню выбора.")
 
 def main():
-    manager = TaskManager()
-    manager.load()
-
     while True:
         print_menu()
         user = user_input()
@@ -74,17 +74,18 @@ def main():
         elif user == "3":
             while True:
                 try:
-                    if len(manager.tasks) == 0:
+                    tasks = get_all_tasks()
+                    if len(tasks) == 0:
                         print("Нет задач")
                         break
-                    show_task_menu(manager)
-                    number = choose_task_menu(manager)
+                    show_task_menu()
+                    number = choose_task_menu()
                     print_menu_choice()
                     user = user_input()
                     if user == "1":
-                        task_done_menu(manager, number)
+                        task_done_menu(number)
                     elif user == "2":
-                        delete_task_menu(manager, number)
+                        delete_task_menu(number)
                     elif user == "0":
                         break
                     else:
@@ -92,7 +93,7 @@ def main():
                 except (ValueError, TypeError) as e:
                     print(f'Error {e}')
                     break
-                print("Номер задачи \n")
+                print("Выбрать еще задачу? \n")
                 if user_input("[да|нет]: ").lower() == "да":
                     continue
                 else:
