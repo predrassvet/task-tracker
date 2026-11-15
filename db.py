@@ -53,6 +53,15 @@ def iter_undone_tasks() -> Iterator[tuple]:
         yield task
     conn.close()
 
+def count_tasks() ->int:
+    conn = sqlite3.connect("task.db")
+    cur = conn.cursor()
+    cur.execute("SELECT COUNT(*) FROM tasks")
+    count = cur.fetchone()
+    conn.close()   
+    return count[0]
+
+
 if __name__ == "__main__":
     n = iter_task()
     for i in n:
@@ -62,3 +71,5 @@ if __name__ == "__main__":
     j = iter_undone_tasks()
     for i in j:
         print(i)
+    h = count_tasks()
+    print(h)
