@@ -1,3 +1,4 @@
+from collections.abc import Iterator 
 import sqlite3
 def init_db() -> None:
     conn = sqlite3.connect('task.db')
@@ -36,11 +37,28 @@ def delete_task(task_id: int) -> None:
     conn.commit()
     conn.close()
 
+def iter_task() -> Iterator[tuple]:
+    conn = sqlite3.connect('task.db')
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM tasks")
+    for task in cur:
+        yield task
+    conn.close()
+
+def iter_undone_tasks() -> Iterator[tuple]:
+    conn = sqlite3.connect('task.db')
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM tasks WHERE done != 1")
+    for task in cur:
+        yield task
+    conn.close()
+
 if __name__ == "__main__":
-    init_db()
-    #add_task_to_db("gg", "09.21")
-    test = get_all_tasks()
-    for task in test:
-        print(task)
-    #mark_done(5)
-    #delete_task(4)
+    n = iter_task()
+    for i in n:
+        print(i)
+    for i in n:
+        print(i)
+    j = iter_undone_tasks()
+    for i in j:
+        print(i)
