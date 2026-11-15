@@ -1,4 +1,4 @@
-from db import init_db, get_all_tasks, add_task_to_db, mark_done, delete_task
+from db import init_db, get_all_tasks, add_task_to_db, mark_done, delete_task, iter_task, count_tasks
     
 init_db()   # создание базы данных и таблицы при запуске программы
 
@@ -9,7 +9,7 @@ def add_task_menu():
     print("Задача добавлена!")
 
 def show_task_menu():
-    tasks = get_all_tasks()
+    tasks = iter_task()
     for task_id, task_name, deadline, done in tasks:
         print(f"task_id: {task_id} Task - {task_name}, Deadline: {deadline}, Done: {'[x]' if done == 1  else '[]'}")
 
@@ -66,7 +66,7 @@ def main():
                 else:
                     break
         elif user == "2":
-            if len(get_all_tasks()) == 0:
+            if count_tasks() == 0:
                 print("Нет задач")
             else:
                 show_task_menu()
@@ -75,7 +75,7 @@ def main():
             while True:
                 try:
                     tasks = get_all_tasks()
-                    if len(tasks) == 0:
+                    if count_tasks == 0:
                         print("Нет задач")
                         break
                     show_task_menu()
