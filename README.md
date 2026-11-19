@@ -41,4 +41,4 @@ pytest
 ```
 
 ## Стек
-- Python, JSON, pytest
+- Python, SQLite3, pytest
